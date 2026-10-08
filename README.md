@@ -2,17 +2,30 @@
 
 Roll number: **BT2024195**
 
-This repository contains the code, datasets, predictions, generated figures, and report for the polynomial regression assignment.
+This repository contains the datasets, notebooks, generated plots, final predictions, and the final PDF report for the polynomial regression assignment.
 
 ## Repository Structure
 
 ```text
-.
-├── data/          # Train/test CSV files and sample submission
-├── images/        # Generated EDA, model selection, residual, and diagnostic plots
-├── notebooks/     # Training, validation, tuning, and inference notebooks
-├── predictions/   # Final prediction CSV files for submission
-└── report/        # Assignment report in PDF, HTML, and Markdown formats
+ml_assignment/
+├── data/                     # Train/test datasets and sample submission files
+│   ├── train.csv
+│   ├── test.csv
+│   └── sample_submission.csv
+├── images/                   # Generated EDA, model-selection, residual, and diagnostic plots
+│   ├── var1/
+│   └── var2/
+├── notebooks/                # Model development, tuning, validation, and inference notebooks
+│   ├── var1_power_turbine.ipynb
+│   └── var2_thermal_reservoir.ipynb
+├── predictions/              # Final prediction CSVs for submission
+│   ├── BT2024195_pred_var1.csv
+│   └── BT2024195_pred_var2.csv
+├── report/                   # Final PDF report folder
+│   └── BT2024195 Polynomial Regression Report.pdf
+├── README.md                 # Project overview and instructions
+├── .gitignore
+└── .git/
 ```
 
 ## Final Models
@@ -28,9 +41,6 @@ This repository contains the code, datasets, predictions, generated figures, and
 - `notebooks/var2_thermal_reservoir.ipynb`
 - `predictions/BT2024195_pred_var1.csv`
 - `predictions/BT2024195_pred_var2.csv`
-- `report/BT2024195_report.html`
-- `report/BT2024195_report.pdf`
-
-The HTML report is print-ready in A4 portrait format and references figures from `images/`.
+- `report/BT2024195 Polynomial Regression Report.pdf`
 
 If rerunning the notebooks, open them from the `notebooks/` folder so their relative paths resolve to `../data/`, `../images/`, and `../predictions/`.
