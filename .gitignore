@@ -1,0 +1,14 @@
+# Python/Jupyter local artifacts
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# Local browser/profile artifacts
+chrome-profile/
+chrome-profile-html-pdf/
+
+# OS/editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

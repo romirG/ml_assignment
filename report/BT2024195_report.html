@@ -1,0 +1,464 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BT2024195 Polynomial Regression Report</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 12mm 12mm 12mm;
+    }
+
+    :root {
+      --ink: #17212b;
+      --muted: #4c5d6a;
+      --rule: #aab6c2;
+      --head: #e9eef5;
+      --soft: #f4f6f8;
+      --accent: #0f2d45;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0 auto;
+      max-width: 180mm;
+      color: var(--ink);
+      background: white;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.35;
+    }
+
+    h1 {
+      margin: 0 0 4mm;
+      text-align: center;
+      font-size: 18pt;
+      line-height: 1.15;
+    }
+
+    .meta {
+      margin: 0 0 5mm;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10pt;
+    }
+
+    h2 {
+      margin: 5.5mm 0 2mm;
+      color: var(--accent);
+      font-size: 13.2pt;
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin: 3mm 0 1.4mm;
+      color: var(--accent);
+      font-size: 11.2pt;
+    }
+
+    p {
+      margin: 0 0 2.6mm;
+    }
+
+    code,
+    .formula {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .formula {
+      display: block;
+      margin: 2.5mm 0 3.2mm;
+      padding: 2.8mm 3.5mm;
+      text-align: center;
+      background: var(--soft);
+      border: 1px solid #d6dee6;
+      border-radius: 2mm;
+      font-size: 9.2pt;
+      overflow-wrap: anywhere;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2.2mm 0 3.5mm;
+      table-layout: fixed;
+      font-size: 9.2pt;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--rule);
+      padding: 1.8mm 2mm;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--head);
+      font-weight: 700;
+    }
+
+    .summary-table th:nth-child(1),
+    .summary-table td:nth-child(1) {
+      width: 26%;
+    }
+
+    .summary-table th:nth-child(2),
+    .summary-table td:nth-child(2) {
+      width: 11%;
+      text-align: center;
+    }
+
+    .summary-table th:nth-child(3),
+    .summary-table td:nth-child(3) {
+      width: 29%;
+    }
+
+    .summary-table th:nth-child(4),
+    .summary-table td:nth-child(4),
+    .summary-table th:nth-child(5),
+    .summary-table td:nth-child(5) {
+      width: 17%;
+    }
+
+    .eda-table th,
+    .eda-table td,
+    .model-table th,
+    .model-table td {
+      font-size: 9pt;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5mm;
+      align-items: start;
+    }
+
+    .figure {
+      margin: 2.2mm auto 3.2mm;
+      text-align: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .figure img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .caption {
+      margin-top: 0.8mm;
+      color: var(--muted);
+      font-size: 8.7pt;
+      text-align: center;
+    }
+
+    .img-distribution img {
+      width: 86%;
+      max-height: 55mm;
+    }
+
+    .img-correlation img {
+      width: 58%;
+      max-height: 58mm;
+    }
+
+    .img-scatter3d img {
+      width: 60%;
+      max-height: 60mm;
+    }
+
+    .img-degree img {
+      width: 100%;
+      max-height: 86mm;
+    }
+
+    .img-residual img {
+      width: 100%;
+      max-height: 82mm;
+    }
+
+    .img-diagnostic img {
+      width: 70%;
+      max-height: 52mm;
+    }
+
+    .img-sparsity img {
+      width: 88%;
+      max-height: 48mm;
+    }
+
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      align-items: start;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin: 2.2mm 0 3.2mm;
+    }
+
+    .side-by-side .figure {
+      margin: 0;
+    }
+
+    .side-by-side .img-correlation img,
+    .side-by-side .img-scatter3d img,
+    .side-by-side .img-diagnostic img {
+      width: 100%;
+    }
+
+    .page-break {
+      break-before: page;
+      page-break-before: always;
+    }
+
+    .avoid-break {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    @media screen {
+      body {
+        padding: 16px 0 40px;
+      }
+
+      .sheet {
+        margin: 0 auto;
+        padding: 14mm 15mm;
+        width: 210mm;
+        min-height: 297mm;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.16);
+      }
+    }
+
+    @media print {
+      body {
+        max-width: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <h1>Polynomial Regression Assignment Report</h1>
+    <p class="meta">Name: Romir Gupta | Roll Number: BT2024195 | Assignment: Polynomial Regression</p>
+
+    <section>
+      <h2>1. Summary</h2>
+      <p>Two polynomial regression models were trained for the assigned datasets. The final model for var1 used a degree-5 polynomial expansion with ElasticNet regularization, while the final model for var2 used a degree-10 polynomial expansion with ElasticNet regularization.</p>
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Degree</th>
+            <th>Final model</th>
+            <th>10-fold CV MSE</th>
+            <th>10-fold CV R2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>var1: Steam turbine optimization</td>
+            <td>5</td>
+            <td>ElasticNet, alpha = 0.009103, l1_ratio = 1.0</td>
+            <td>0.297031 +/- 0.023987</td>
+            <td>0.971316 +/- 0.004937</td>
+          </tr>
+          <tr>
+            <td>var2: Thermal reservoir mapping</td>
+            <td>10</td>
+            <td>ElasticNet, alpha = 0.000655, l1_ratio = 0.1</td>
+            <td>0.230232 +/- 0.041747</td>
+            <td>0.994225 +/- 0.002097</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>2. ElasticNet Objective</h2>
+      <p>ElasticNet was fitted on the polynomial feature matrix. The objective minimized was:</p>
+      <span class="formula">MSE(y, X<sub>poly</sub> beta) + alpha * [l1_ratio * ||beta||<sub>1</sub> + (1 - l1_ratio) * ||beta||<sub>2</sub><sup>2</sup> / 2]</span>
+      <p>Here, <code>alpha</code> controls the overall regularization strength and <code>l1_ratio</code> controls the balance between L1 sparsity and L2 shrinkage.</p>
+    </section>
+
+    <section>
+      <h2>3. Data Exploration and Preprocessing</h2>
+      <p>The var1 dataset has six input variables and var2 has three input variables. Inputs were already normalized to approximately <code>[-1, 1]</code>, but scaling was still applied after polynomial expansion because high-degree terms can have different variances.</p>
+      <p>The pipeline generated polynomial features using <code>PolynomialFeatures(include_bias=False)</code>, standardized them with <code>StandardScaler</code>, and fitted a regularized linear model. Keeping these steps inside a pipeline ensured fold-wise scaling during cross-validation and avoided leakage.</p>
+
+      <table class="eda-table">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Target mean</th>
+            <th>Target std</th>
+            <th>Target min</th>
+            <th>Target max</th>
+            <th>Largest linear correlations with y</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>var1</td>
+            <td>0.8736</td>
+            <td>3.2708</td>
+            <td>-10.7271</td>
+            <td>11.3392</td>
+            <td>x5: -0.255, x6: -0.227</td>
+          </tr>
+          <tr>
+            <td>var2</td>
+            <td>2.0807</td>
+            <td>6.6172</td>
+            <td>-29.9015</td>
+            <td>32.3655</td>
+            <td>x2: 0.457, x3: 0.190</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Exploratory analysis showed weak individual feature-target correlations in var1 and a wider target spread in var2. These observations supported the use of polynomial feature expansion to capture nonlinear effects and interactions.</p>
+
+      <div class="figure img-distribution">
+        <img src="../images/var1_distributions.png" alt="var1 distributions">
+        <div class="caption">Figure 1a: var1 feature and target distributions.</div>
+      </div>
+
+      <div class="figure img-distribution">
+        <img src="../images/var2_distributions.png" alt="var2 distributions">
+        <div class="caption">Figure 1b: var2 feature and target distributions.</div>
+      </div>
+
+      <div class="side-by-side">
+        <div class="figure img-correlation">
+          <img src="../images/var1_correlation.png" alt="var1 correlation heatmap">
+          <div class="caption">Figure 2a: var1 correlation heatmap.</div>
+        </div>
+
+        <div class="figure img-scatter3d">
+          <img src="../images/var2_3d_scatter.png" alt="var2 3D training scatter">
+          <div class="caption">Figure 2b: var2 3D training scatter colored by target value.</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Model Selection Approach</h2>
+      <p>The two main modeling decisions were polynomial degree and regularization strength. Ridge regression with <code>alpha=1.0</code> was used as a stable proxy during degree selection because polynomial expansion creates correlated features. After choosing the degree, ElasticNet was tuned over <code>alpha</code> and <code>l1_ratio</code>.</p>
+      <p>ElasticNet was useful because L2 regularization stabilizes coefficients, while L1 regularization can remove unnecessary polynomial terms and reduce overfitting.</p>
+
+      <h2>5. Polynomial Degree Selection</h2>
+      <h3>var1</h3>
+      <p>For var1, degrees 1 to 10 were evaluated. Validation error decreased up to degree 5 and then increased for higher degrees. This indicates that degrees above 5 started overfitting the training data. Therefore, degree 5 was selected.</p>
+      <div class="figure img-degree">
+        <img src="../images/var1_degree_selection.png" alt="var1 degree selection">
+        <div class="caption">Figure 3: Degree selection for var1 using 10-fold cross-validation.</div>
+      </div>
+
+      <h3>var2</h3>
+      <p>For var2, degrees 1 to 20 were evaluated. The validation score improved until degree 10, after which the improvement stopped and the error slightly increased. Degree 10 was selected because it gave the best validation performance while avoiding unnecessary higher-degree complexity.</p>
+      <div class="figure img-degree">
+        <img src="../images/var2_degree_selection.png" alt="var2 degree selection">
+        <div class="caption">Figure 4: Degree selection for var2 using 10-fold cross-validation.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. Final Model Details</h2>
+      <div class="model-grid avoid-break">
+        <table class="model-table">
+          <thead><tr><th>var1 quantity</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Selected polynomial degree</td><td>5</td></tr>
+            <tr><td>Number of polynomial features</td><td>461</td></tr>
+            <tr><td>Best alpha</td><td>0.009103</td></tr>
+            <tr><td>Best l1_ratio</td><td>1.0</td></tr>
+            <tr><td>Non-zero coefficients</td><td>126 / 461</td></tr>
+            <tr><td>Training MSE</td><td>0.216335</td></tr>
+            <tr><td>Training R2</td><td>0.979757</td></tr>
+            <tr><td>10-fold CV MSE</td><td>0.297031 +/- 0.023987</td></tr>
+            <tr><td>10-fold CV R2</td><td>0.971316 +/- 0.004937</td></tr>
+          </tbody>
+        </table>
+
+        <table class="model-table">
+          <thead><tr><th>var2 quantity</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Selected polynomial degree</td><td>10</td></tr>
+            <tr><td>Number of polynomial features</td><td>285</td></tr>
+            <tr><td>Best alpha</td><td>0.000655</td></tr>
+            <tr><td>Best l1_ratio</td><td>0.1</td></tr>
+            <tr><td>Non-zero coefficients</td><td>253 / 285</td></tr>
+            <tr><td>Training MSE</td><td>0.162370</td></tr>
+            <tr><td>Training R2</td><td>0.996288</td></tr>
+            <tr><td>10-fold CV MSE</td><td>0.230232 +/- 0.041747</td></tr>
+            <tr><td>10-fold CV R2</td><td>0.994225 +/- 0.002097</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>For var1, <code>l1_ratio=1.0</code> made the model Lasso-like and removed many weak degree-5 terms. For var2, <code>l1_ratio=0.1</code> kept the model mostly Ridge-like, suitable for a response distributed across many degree-10 terms.</p>
+
+      <div class="figure img-residual">
+        <img src="../images/var1_residuals.png" alt="var1 residuals">
+        <div class="caption">Figure 5a: var1 training residual diagnostics.</div>
+      </div>
+
+      <div class="figure img-residual">
+        <img src="../images/var2_residuals.png" alt="var2 residuals">
+        <div class="caption">Figure 5b: var2 training residual diagnostics.</div>
+      </div>
+    </section>
+
+    <section class="page-break">
+      <h2>7. Prediction and Regularization Diagnostics</h2>
+      <p>Prediction distributions were compared against training target distributions as a sanity check that the final polynomial models produced realistic ranges.</p>
+
+      <div class="side-by-side">
+        <div class="figure img-diagnostic">
+          <img src="../images/var1_pred_distribution.png" alt="var1 prediction distribution">
+          <div class="caption">Figure 6a: var1 training target vs test prediction distribution.</div>
+        </div>
+
+        <div class="figure img-diagnostic">
+          <img src="../images/var2_pred_distribution.png" alt="var2 prediction distribution">
+          <div class="caption">Figure 6b: var2 training target vs test prediction distribution.</div>
+        </div>
+      </div>
+
+      <p>The coefficient sparsity plots further explain the different regularization behavior. var1 is much sparser because the best model uses a Lasso-like penalty, while var2 keeps most polynomial coefficients active because its fitted response is more distributed across the degree-10 feature space.</p>
+
+      <div class="figure img-sparsity">
+        <img src="../images/var1_coeff_sparsity.png" alt="var1 coefficient sparsity">
+        <div class="caption">Figure 7a: var1 coefficient sparsity.</div>
+      </div>
+
+      <div class="figure img-sparsity">
+        <img src="../images/var2_coeff_sparsity.png" alt="var2 coefficient sparsity">
+        <div class="caption">Figure 7b: var2 coefficient sparsity.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>8. Conclusion</h2>
+      <p>The final models are polynomial regression pipelines with cross-validated degree selection and ElasticNet regularization. Degree 5 was selected for var1 because it gave the best validation performance before overfitting began. Degree 10 was selected for var2 because it captured the higher-degree spatial structure while maintaining the best cross-validation score.</p>
+      <p>The final 10-fold CV R2 scores were 0.971316 for var1 and 0.994225 for var2. The two prediction CSV files were generated from the final fitted pipelines for assignment submission.</p>
+    </section>
+  </main>
+</body>
+</html>
+
